@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit, ElementRef, ViewChild } from '@angular/co
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService, StreamToken } from './chat.service';
+import { UploadComponent, UploadEvent } from './upload.component';
 import { Subscription } from 'rxjs';
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: 'user' | 'assistant' | 'system';
   text: string;
   streaming?: boolean;
 }
@@ -13,7 +14,7 @@ interface Message {
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, UploadComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
@@ -33,6 +34,14 @@ export class AppComponent implements OnInit, OnDestroy {
     this.chatService.connect();
   }
 
+  onDocUploaded(event: UploadEvent): void {
+    const text = event.success
+      ? `Document indexé : ${event.filename} (${event.chunks} chunks). Vous pouvez maintenant poser des questions dessus.`
+      : `Échec de l'indexation de ${event.filename}.`;
+    this.messages.push({ role: 'system', text });
+    this.scrollToBottom();
+  }
+
   send(): void {
     const q = this.question.trim();
     if (!q || this.loading) return;
@@ -43,6 +52,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     const assistantMsg: Message = { role: 'assistant', text: '', streaming: true };
     this.messages.push(assistantMsg);
+    this.scrollToBottom();
 
     this.sub = this.chatService.ask(q).subscribe((token: StreamToken) => {
       if (!token.done) {

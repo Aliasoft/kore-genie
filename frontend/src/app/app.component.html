@@ -6,16 +6,22 @@
     <span class="tagline">IA Privée • Données internes</span>
   </header>
 
+  <!-- Upload -->
+  <div class="upload-bar">
+    <app-upload (uploaded)="onDocUploaded($event)" />
+  </div>
+
   <!-- Messages -->
   <main class="messages">
     <div *ngIf="messages.length === 0" class="empty">
-      <p>Posez une question sur vos documents internes.</p>
+      <p>Déposez un document puis posez une question.</p>
     </div>
 
     <div *ngFor="let msg of messages"
          class="message"
          [class.user]="msg.role === 'user'"
-         [class.assistant]="msg.role === 'assistant'">
+         [class.assistant]="msg.role === 'assistant'"
+         [class.system]="msg.role === 'system'">
       <div class="bubble">
         <span class="text">{{ msg.text }}</span>
         <span *ngIf="msg.streaming" class="cursor">▋</span>

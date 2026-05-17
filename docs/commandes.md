@@ -215,4 +215,43 @@ npm run build
 
 ---
 
+## Étape 09 • Upload depuis l'UI
+
+```bash
+# L'upload se fait directement depuis l'interface
+# http://localhost:4200
+# Glisser-déposer ou clic sur la zone de dépôt
+
+# Vérifier que le document est bien indexé dans Chroma
+curl http://localhost:8000/api/v1/collections/kore-genie-docs/count
+
+# Tester le RAG sur le document uploadé
+curl -X POST http://localhost:8080/api/rag/ask \
+  -H "Content-Type: application/json" \
+  -d '{"question": "Résume ce document"}'
+```
+
+---
+
+## Démarrage complet du MVP
+
+```bash
+# 1. Infrastructure
+docker compose up -d
+
+# 2. Télécharger LLaMA 3 (une seule fois)
+docker exec -it kore-ollama ollama pull llama3
+
+# 3. Backend Spring Boot
+mvn spring-boot:run
+
+# 4. Frontend Angular
+cd frontend && npm install && npm start
+
+# 5. Ouvrir http://localhost:4200
+#    Déposer un document • poser une question
+```
+
+---
+
 *Ce fichier est mis à jour à chaque nouvelle étape.*
