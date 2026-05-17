@@ -13,8 +13,18 @@
             "outputPath": "dist/kore-genie-ui",
             "index": "src/index.html",
             "browser": "src/main.ts",
+            "tsConfig": "tsconfig.json",
+            "polyfills": ["zone.js"],
+            "assets": ["src/assets"],
             "styles": ["src/styles.css"],
             "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false
+            }
           }
         },
         "serve": {
@@ -26,5 +36,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": false
   }
 }
