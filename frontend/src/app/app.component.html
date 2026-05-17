@@ -1,0 +1,43 @@
+<div class="layout">
+
+  <!-- Header -->
+  <header class="header">
+    <span class="logo">kore<span class="accent">-genie</span></span>
+    <span class="tagline">IA Privée • Données internes</span>
+  </header>
+
+  <!-- Messages -->
+  <main class="messages">
+    <div *ngIf="messages.length === 0" class="empty">
+      <p>Posez une question sur vos documents internes.</p>
+    </div>
+
+    <div *ngFor="let msg of messages"
+         class="message"
+         [class.user]="msg.role === 'user'"
+         [class.assistant]="msg.role === 'assistant'">
+      <div class="bubble">
+        <span class="text">{{ msg.text }}</span>
+        <span *ngIf="msg.streaming" class="cursor">▋</span>
+      </div>
+    </div>
+
+    <div #messagesEnd></div>
+  </main>
+
+  <!-- Input -->
+  <footer class="input-area">
+    <textarea
+      [(ngModel)]="question"
+      (keydown)="onEnter($event)"
+      [disabled]="loading"
+      placeholder="Votre question... (Entrée pour envoyer)"
+      rows="2">
+    </textarea>
+    <button (click)="send()" [disabled]="loading || !question.trim()">
+      <span *ngIf="!loading">Envoyer</span>
+      <span *ngIf="loading">...</span>
+    </button>
+  </footer>
+
+</div>

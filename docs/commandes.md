@@ -195,4 +195,24 @@ curl -X POST http://localhost:8080/api/llm/ask \
 
 ---
 
+## Étape 08 • Frontend Angular
+
+```bash
+# Aller dans le dossier frontend
+cd frontend
+
+# Installer les dépendances (une seule fois)
+npm install
+
+# Lancer en dev avec proxy vers Spring Boot
+npm start
+# Interface disponible sur http://localhost:4200
+
+# Build production
+npm run build
+# Résultat dans frontend/dist/kore-genie-ui/
+```
+
+---
+
 *Ce fichier est mis à jour à chaque nouvelle étape.*
