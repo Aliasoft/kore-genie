@@ -23,7 +23,7 @@ services:
   # Chroma DB • base de données vectorielle
   # ──────────────────────────────────────────────
   chroma:
-    image: chromadb/chroma:latest
+    image: chromadb/chroma:0.4.24
     container_name: kore-chroma
     ports:
       - "8000:8000"
