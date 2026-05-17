@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: kore-genie
+
+server:
+  port: 8080
+
+kore:
+  genie:
+    ollama:
+      base-url: http://localhost:11434   # URL du serveur Ollama (Docker)
+      model: llama3                      # Nom du modèle LLaMA 3
+      timeout: 120s                      # Timeout pour les réponses du LLM
+    chroma:
+      base-url: http://localhost:8000    # URL de Chroma DB (Docker)
+      collection: kore-genie-docs        # Nom de la collection de vecteurs
+    ingestion:
+      upload-dir: ./uploads              # Dossier de dépôt des documents à ingérer
