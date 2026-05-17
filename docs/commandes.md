@@ -153,4 +153,25 @@ curl -X POST http://localhost:8080/api/rag/ask \
 
 ---
 
+## Étape 06 — Streaming WebSocket
+
+```bash
+# Installer wscat (outil de test WebSocket)
+npm install -g wscat
+
+# Se connecter au WebSocket
+wscat -c ws://localhost:8080/ws/rag
+
+# Envoyer une question (après connexion)
+> {"question": "Quelle est notre politique de congés ?"}
+
+# Réponse token par token
+< {"token":"Selon","done":false}
+< {"token":" les","done":false}
+...
+< {"token":"","done":true}
+```
+
+---
+
 *Ce fichier est mis à jour à chaque nouvelle étape.*
