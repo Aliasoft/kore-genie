@@ -44,6 +44,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
+    image: kore-genie:latest
     container_name: kore-genie
     ports:
       - "8080:8080"
