@@ -81,16 +81,14 @@ docker compose down -v
 
 ## Étape 03 • Premier appel LLM
 
-```bash
+```powershell
 # Prérequis : Docker Compose up + llama3 téléchargé + mvn spring-boot:run
 
 # Poser une question au LLM via l'API REST
-curl -X POST http://localhost:8080/api/llm/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Explique ce qu'\''est le RAG en 3 phrases"}'
+Invoke-RestMethod -Uri "http://localhost:8080/api/llm/ask" -Method POST -ContentType "application/json" -Body '{"question": "Explique ce quest le RAG en 3 phrases"}'
 
 # Réponse attendue
-# { "answer": "..." }
+# answer : ...
 ```
 
 ---
@@ -127,60 +125,54 @@ docker compose ps
 mvn spring-boot:run
 
 # 4. Tester
-curl http://localhost:8080/api/llm/ask \
-  -X POST \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Test"}'
+Invoke-RestMethod -Uri "http://localhost:8080/api/llm/ask" -Method POST -ContentType "application/json" -Body '{"question": "Test"}'
 ```
 
 ---
 
 ## Étape 04 • Ingestion de documents
 
-```bash
+```powershell
 # Uploader un fichier dans Chroma via l'API
-curl -X POST http://localhost:8080/api/ingest \
-  -F "file=@/chemin/vers/ton/document.pdf"
+Invoke-RestMethod -Uri "http://localhost:8080/api/ingest" -Method POST -Form @{ file = Get-Item "C:\chemin\vers\document.pdf" }
 
 # Réponse attendue
-# { "filename": "document.pdf", "chunks": 42, "status": "OK" }
+# filename : document.pdf  chunks : 42  status : OK
 
 # Vérifier les collections dans Chroma
-curl http://localhost:8000/api/v1/collections
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/collections"
 
 # Compter les vecteurs stockés
-curl http://localhost:8000/api/v1/collections/kore-genie-docs/count
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/collections/kore-genie-docs/count"
 ```
 
 ---
 
 ## Étape 05 • Moteur RAG
 
-```bash
+```powershell
 # Prérequis : document déjà ingéré via POST /api/ingest
 
 # Poser une question sur les documents indexés
-curl -X POST http://localhost:8080/api/rag/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Quelle est notre politique de congés ?"}'
+Invoke-RestMethod -Uri "http://localhost:8080/api/rag/ask" -Method POST -ContentType "application/json" -Body '{"question": "Quelle est notre politique de conges ?"}'
 
 # Réponse attendue
-# { "answer": "...", "sources": ["fichier.pdf"], "chunksUsed": 3 }
+# answer : ...   sources : {fichier.pdf}   chunksUsed : 3
 ```
 
 ---
 
 ## Étape 06 • Streaming WebSocket
 
-```bash
+```powershell
 # Installer wscat (outil de test WebSocket)
 npm install -g wscat
 
-# Se connecter au WebSocket
+# Se connecter au WebSocket (dans un terminal wscat)
 wscat -c ws://localhost:8080/ws/rag
 
 # Envoyer une question (après connexion)
-> {"question": "Quelle est notre politique de congés ?"}
+> {"question": "Quelle est notre politique de conges ?"}
 
 # Réponse token par token
 < {"token":"Selon","done":false}
@@ -193,28 +185,26 @@ wscat -c ws://localhost:8080/ws/rag
 
 ## Étape 07 • Docker Compose complet
 
-```bash
+```powershell
 # Construire et démarrer tout le stack (Ollama + Chroma + kore-genie)
-docker compose up --build -d
+docker compose -f docker-compose.prod.yml up --build -d
 
 # Suivre les logs de kore-genie
-docker compose logs -f kore-genie
+docker compose -f docker-compose.prod.yml logs -f kore-genie
 
 # Reconstruire uniquement kore-genie après modif du code
-docker compose build kore-genie
-docker compose up -d kore-genie
+docker compose -f docker-compose.prod.yml build kore-genie
+docker compose -f docker-compose.prod.yml up -d kore-genie
 
 # Tester l'API dans le stack complet
-curl -X POST http://localhost:8080/api/llm/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Test de bout en bout"}'
+Invoke-RestMethod -Uri "http://localhost:8080/api/llm/ask" -Method POST -ContentType "application/json" -Body '{"question": "Test de bout en bout"}'
 ```
 
 ---
 
 ## Étape 08 • Frontend Angular
 
-```bash
+```powershell
 # Aller dans le dossier frontend
 cd frontend
 
@@ -234,36 +224,34 @@ npm run build
 
 ## Étape 09 • Upload depuis l'UI
 
-```bash
+```powershell
 # L'upload se fait directement depuis l'interface
 # http://localhost:4200
 # Glisser-déposer ou clic sur la zone de dépôt
 
 # Vérifier que le document est bien indexé dans Chroma
-curl http://localhost:8000/api/v1/collections/kore-genie-docs/count
+Invoke-RestMethod -Uri "http://localhost:8000/api/v1/collections/kore-genie-docs/count"
 
 # Tester le RAG sur le document uploadé
-curl -X POST http://localhost:8080/api/rag/ask \
-  -H "Content-Type: application/json" \
-  -d '{"question": "Résume ce document"}'
+Invoke-RestMethod -Uri "http://localhost:8080/api/rag/ask" -Method POST -ContentType "application/json" -Body '{"question": "Resume ce document"}'
 ```
 
 ---
 
 ## Démarrage complet du MVP
 
-```bash
-# 1. Infrastructure
-docker compose up -d
+```powershell
+# 1. Infrastructure DEV
+docker compose -f docker-compose.dev.yml up -d
 
 # 2. Télécharger LLaMA 3 (une seule fois)
 docker exec -it kore-ollama ollama pull llama3
 
-# 3. Backend Spring Boot
+# 3. Backend Spring Boot (depuis IntelliJ ou terminal)
 mvn spring-boot:run
 
 # 4. Frontend Angular
-cd frontend && npm install && npm start
+cd frontend; npm install; npm start
 
 # 5. Ouvrir http://localhost:4200
 #    Déposer un document • poser une question
