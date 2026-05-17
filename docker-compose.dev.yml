@@ -49,4 +49,5 @@ volumes:
 
 networks:
   kore-genie-net:
+    name: kore-genie-net
     driver: bridge
