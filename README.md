@@ -26,7 +26,7 @@ Chaque brique suit la même logique : extraite ou construite sur une base réell
 |---|---|---|
 | [kore-hexagonal](https://github.com/alak8ba/kore-hexagonal) | Architecture hexagonale • 1,5 an de production réelle • 658 commits | Disponible |
 | [kore-batch](https://github.com/alak8ba/kore-batch) | Traitement batch • plusieurs années de production • fort volume de données | Disponible |
-| **[kore-genie](https://github.com/alak8ba/kore-genie)** | Socle IA privée & RAG • déploiement on-premise • zéro donnée sortante | En cours |
+| **[kore-genie](https://github.com/alak8ba/kore-genie)** | Socle IA privée & RAG • déploiement on-premise • zéro donnée sortante | Disponible |
 | kore-stream | Traitement de flux temps réel | Prévu |
 | kore-react | Composants frontend réutilisables | Prévu |
 
@@ -45,7 +45,7 @@ C'est une démonstration concrète d'une capacité : **mettre en place une IA pr
 ## Philosophie
 
 - **Zéro donnée sortante** • aucun token ne quitte le périmètre de l'entreprise
-- **Un socle, N domaines** • agnostique du métier, chaque projet implémente son propre corpus
+- **Un socle, N domaines** • agnostique du métier, chaque projet branche ses propres documents
 - **Open source only** • LLaMA, Ollama, LangChain4j, Chroma • aucune dépendance propriétaire
 - **Progressif** • un MVP fonctionnel en quelques jours, extensible ensuite
 
